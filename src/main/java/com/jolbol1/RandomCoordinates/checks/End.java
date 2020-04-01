@@ -34,7 +34,6 @@ public class End {
      * @return A Location on the nearest end island.
      */
     public Location endCoord(final Location l) {
-
         final int X = l.getBlockX();
         final int Y = l.getBlockY();
         final int Z = l.getBlockZ();

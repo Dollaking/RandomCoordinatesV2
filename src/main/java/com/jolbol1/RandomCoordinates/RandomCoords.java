@@ -29,7 +29,6 @@ import com.phenomical.RandomCoordinates.managers.UpdateManager;
 import com.sk89q.worldguard.bukkit.WorldGuardPlugin;
 import net.milkbowl.vault.economy.Economy;
 
-import org.bstats.Metrics;
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
@@ -45,6 +44,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 import java.io.*;
 import java.util.*;
+import java.util.concurrent.Callable;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -247,11 +247,6 @@ public class RandomCoords extends JavaPlugin {
 		getCommand("rc").setExecutor(handler);
 		getCommand("rc").setTabCompleter(new ConstructTabCompleter());
 
-		if (RandomCoords.getPlugin().config.getString("Metrics").equalsIgnoreCase("true")) {
-			final Metrics metrics = new Metrics(this);
-			setupCharts(metrics);
-		}
-
 		final PortalEnter pe = new PortalEnter();
 		loadedPortalList = loadedPortals();
 		pe.runTaskTimer(this, 0L, 20L);
@@ -382,46 +377,6 @@ public class RandomCoords extends JavaPlugin {
 		}
 		econ = rsp.getProvider();
 		return econ != null;
-	}
-
-	/**
-	 * Generates the charts to send to metric.
-	 * 
-	 * @param metrics
-	 *            returns charts to send.
-	 */
-	public void setupCharts(final Metrics metrics) {
-		metrics.addCustomChart(new Metrics.SingleLineChart("success") {
-			@Override
-			public int getValue() {
-				// (This is useless as there is already a player chart by
-				// default.)
-				return successTeleports;
-			}
-		});
-		metrics.addCustomChart(new Metrics.SingleLineChart("failed") {
-			@Override
-			public int getValue() {
-				// (This is useless as there is already a player chart by
-				// default.)
-				return failedTeleports;
-			}
-		});
-		metrics.addCustomChart(new Metrics.AdvancedPie("teleport_method") {
-			@Override
-			public HashMap<String, Integer> getValues(HashMap<String, Integer> valueMap) {
-				valueMap.put("All", allTeleport);
-				valueMap.put("Others", otherTeleport);
-				valueMap.put("Portal", portalTeleport);
-				valueMap.put("Sign", signTeleport);
-				valueMap.put("Join", onJoin);
-				valueMap.put("Command", commandTeleport);
-				valueMap.put("Warps", warpTeleport);
-
-				return valueMap;
-			}
-
-		});
 	}
 
 	public FileConfiguration setupFile(final File file) {

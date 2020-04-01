@@ -19,10 +19,7 @@
 
 package com.jolbol1.RandomCoordinates.managers;
 
-import com.earth2me.essentials.Essentials;
-import com.earth2me.essentials.Kit;
-import com.earth2me.essentials.MetaItemStack;
-import com.earth2me.essentials.User;
+import com.earth2me.essentials.*;
 import com.earth2me.essentials.textreader.IText;
 import com.earth2me.essentials.textreader.KeywordReplacer;
 import com.earth2me.essentials.textreader.SimpleTextInput;
@@ -64,7 +61,9 @@ class KitManager {
                     List<String> items;
                     
                     try {
-                        items=Kit.getItems(ess, u, name, kit);
+                        Kit stuff = new Kit(name, ess);
+                        items=stuff.getItems();
+
                         final Inventory inv = c.getInventory();
 
 
@@ -124,7 +123,8 @@ class KitManager {
                     final User u = ess.getUser(p);
                     List<String> items;
                     try {
-                    	items=Kit.getItems(ess, u, name, kit);
+                        Kit stuff = new Kit(name, ess);
+                        items=stuff.getItems();
 
                         for(ItemStack item : deSerialize(items, u).get()) {
                             itemStacks.add(item);
